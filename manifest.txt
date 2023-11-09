@@ -1,0 +1,22 @@
+Step by step
+
+
+1 define a player and a few attributes
+
+2 define some functions that calculate what the player will do when they have the ball and when they dont have the ball
+ - This could be on the perimeter, on defense etc...
+
+ 3 make a visual representation of it
+
+
+ Advanced  - build plays into it like the pick and roll
+
+
+
+
+ Assume we play 5 out, will implement other formations later
+
+Logic to implement next
+ - Distance from basket
+    - Affect how much its worth
+    - Affect the probability of it going in
