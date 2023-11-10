@@ -17,6 +17,7 @@ We will need formations
 {"LC":Player1, "P", None} like this
 
 """
+
 def average(values):
 
     total = 0
@@ -24,7 +25,7 @@ def average(values):
 
         total += i
 
-    return total / len(value)
+    return total / len(values)
 
 def getDribbleAt(position):
 
