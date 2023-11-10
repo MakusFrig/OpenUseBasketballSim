@@ -4,6 +4,8 @@ import sys
 
 import requests
 
+from bs4 import Comment
+
 from bs4 import BeautifulSoup as bs
 
 import pandas as pd
@@ -153,9 +155,34 @@ def getShotPct(playerTag, distance = 23):
     #https://www.basketball-reference.com/players/c/cartevi01/shooting/2020
 
     base_link = "https://www.basketball-reference.com/players/"
+    
+    #this array will hold everything
+    shots = []
+
+    year = 2018
+
+
+    link = base_link + playerTag[0]  +"/" + playerTag + "/shooting/" + str(year)
+
+    print(link)
+
+    r = requests.get(link)
+    
+    
+
+    soup = bs(r.content, 'html.parser')
+
+    for comments in soup.findAll(text=lambda text:isinstance(text, Comment)):
+        print(comments.extract())
+
+    div = soup.find_all(class_="tooltip miss")
+
+    print(div)
 
     return 0
 
 player_name = lookup("Vince Carter")
 
 print(player_name)
+
+getShotPct(player_name)
