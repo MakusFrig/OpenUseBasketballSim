@@ -146,10 +146,10 @@ def getSeasons(name):
         seasons[i] = str(seasons[i][:2])+str(seasons[i][5:])
 
     return seasons
+def getShots(playerTag):
 
+    #this is a function that will use basketball references shot log of a player to track where specifically they shoot best from and how the distance affects their shot
 
-#this is a function that will use basketball references shot log of a player to track where specifically they shoot best from and how the distance affects their shot
-def getShotPct(playerTag, distance = 23):
 
     #links should look like this 
     #https://www.basketball-reference.com/players/c/cartevi01/shooting/2020
@@ -159,7 +159,7 @@ def getShotPct(playerTag, distance = 23):
     #this array will hold everything
     shots = []
 
-    year = 2018
+    year = 2020
 
 
     link = base_link + playerTag[0]  +"/" + playerTag + "/shooting/" + str(year)
@@ -173,16 +173,63 @@ def getShotPct(playerTag, distance = 23):
     soup = bs(r.content, 'html.parser')
 
     for comments in soup.findAll(text=lambda text:isinstance(text, Comment)):
-        print(comments.extract())
+        shots.append(comments.extract())
+    #shots[35] is the one we want
+    
+    soup2 = bs(shots[35], 'html.parser')
 
-    div = soup.find_all(class_="tooltip miss")
 
-    print(div)
+    shots_missed = soup2.find_all("div", {"class":"tooltip miss"})
+    shots_made = soup2.find_all("div", {"class":"tooltip make"})
 
-    return 0
+    shots = shots_made + shots_missed
+
+    for i in range(len(shots)):
+
+        shots[i] = str(shots[i].get("tip")).split("<br>")[2].split(" ")
+
+        
+
+        #this line gets the text of if they missed or made the shot and from what distance
+
+        #from here we want to make a new type
+
+        #[make or miss, type, distance]
+
+        temp = shots[i]
+        
+        shots[i] = [temp[0], temp[1][0], temp[3]]
+
+
+
+    
+
+    return shots
+
+def getShotPct(shots, distance = 24): #shots should be an array [make or miss, type, distance]
+    made, missed =0, 0
+
+
+    
+    for i in shots:
+
+        if int(i[2]) >= distance:
+
+            if i[0] == "Made":
+
+                made += 1
+
+            else:
+
+                missed += 1
+
+        
+    return made/(made+missed)
 
 player_name = lookup("Vince Carter")
 
 print(player_name)
 
-getShotPct(player_name)
+shots = getShots(player_name)
+
+print(getShotPct(shots))
