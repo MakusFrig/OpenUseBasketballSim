@@ -149,7 +149,10 @@ def getSeasons(name):
 #this is a function that will use basketball references shot log of a player to track where specifically they shoot best from and how the distance affects their shot
 def getShotPct(playerTag, distance = 23):
 
+    #links should look like this 
+    #https://www.basketball-reference.com/players/c/cartevi01/shooting/2020
 
+    base_link = "https://www.basketball-reference.com/players/"
 
     return 0
 
