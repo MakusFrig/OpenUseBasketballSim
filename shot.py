@@ -4,6 +4,8 @@ import sys
 
 import requests
 
+from math import *
+
 from bs4 import Comment
 
 from bs4 import BeautifulSoup as bs
@@ -146,6 +148,18 @@ def getSeasons(name):
         seasons[i] = str(seasons[i][:2])+str(seasons[i][5:])
 
     return seasons
+
+def distance(coords):
+
+    #the coords of the center of the hoop is [250, 55]
+
+    #135px  = 15ft
+
+    ftpx = 15/135
+
+    coordsc = [250, 55]
+    return ftpx * sqrt((coordsc[0]-coords[0])**2 + (coordsc[1]-coords[1])**2)
+
 def getShots(playerTag):
 
     #this is a function that will use basketball references shot log of a player to track where specifically they shoot best from and how the distance affects their shot
@@ -186,7 +200,17 @@ def getShots(playerTag):
 
     for i in range(len(shots)):
 
+        position = shots[i].get("style").split(";")[:2]
+
+        for j in range(2):
+
+            position[j] = int(position[j].split(":")[1].replace("px", ""))
+
+        
+
         shots[i] = str(shots[i].get("tip")).split("<br>")[2].split(" ")
+
+        
 
         
 
@@ -194,11 +218,11 @@ def getShots(playerTag):
 
         #from here we want to make a new type
 
-        #[make or miss, type, distance]
+        #[make or miss, type, distance, coords]
 
         temp = shots[i]
         
-        shots[i] = [temp[0], temp[1][0], temp[3]]
+        shots[i] = [temp[0], temp[1][0], temp[3], position]
 
 
 
@@ -206,14 +230,14 @@ def getShots(playerTag):
 
     return shots
 
-def getShotPct(shots, distance = 24): #shots should be an array [make or miss, type, distance]
+def getShotPct(shots, d = 24): #shots should be an array [make or miss, type, distance]
     made, missed =0, 0
 
-
+    
     
     for i in shots:
-
-        if int(i[2]) >= distance:
+        print(i[3], [250, 55], distance(i[3]))
+        if distance(i[3]) >= d:
 
             if i[0] == "Made":
 
@@ -232,4 +256,5 @@ print(player_name)
 
 shots = getShots(player_name)
 
-print(getShotPct(shots))
+print(getShotPct(shots, 0))
+
